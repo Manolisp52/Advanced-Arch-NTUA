@@ -39,21 +39,6 @@ for file in "$directory"/*; do
 	L1_SIZE=$(grep "Size(KB):" $file | head -n 1 | awk '{print $2}')
 	L1_BLOCK_SIZE=$(grep "Block Size(B):" $file | head -n 1 | awk '{print $3}')
 	L1_ASSOCIATIVITY=$(grep "Associativity:" $file | tail -n 2 | head -n 1 | awk '{print $2}')
-	 
-	# Determine the ratio of L1 size to base L1 size
-        size_ratio=$((L1_SIZE / base_l1_size))
-
-        # Adjust IPC value based on the size ratio
-        for ((i = 1; i < size_ratio; i++)); do
-            ipc_value=$(awk "BEGIN {printf \"%.6f\", $ipc_value / 1.15}")
-        done
-        
-        associativity_ratio=$((L1_ASSOCIATIVITY / base_l1_associativity))
-
-        # Adjust IPC value based on the associativity ratio
-        for ((i = 1; i < associativity_ratio; i++)); do
-            ipc_value=$(awk "BEGIN {printf \"%.6f\", $ipc_value / 1.05}")
-        done
         
 	filename="${L1_SIZE}_${L1_ASSOCIATIVITY}_${L1_BLOCK_SIZE}"
 	if [ ! -e "$filename" ]; then
